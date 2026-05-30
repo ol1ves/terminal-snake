@@ -18,13 +18,34 @@ struct Vec2 {
     int y;
 
     /**
+     * @brief Adds two Vec2s together and returns the result.
+     * @param rhs The right-hand side Vec2 to add to this Vec2.
+     * @param lhs The left-hand side Vec2 to add to the rhs Vec2.
+     * @return A new Vec2 that is the sum of this Vec2 and the rhs Vec2.
+     */
+    Vec2 operator+(const Vec2& rhs) const {
+        return { x + rhs.x, y + rhs.y };
+    }
+
+    /**
+     * @brief Subtracts another Vec2 from this Vec2 and returns the result.
+     * @param rhs The right-hand side Vec2 to subtract from this Vec2.
+     * @return A new Vec2 that is the difference between this Vec2 and the rhs Vec2.
+     */
+    Vec2 operator-(const Vec2& rhs) const {
+        return { x - rhs.x, y - rhs.y };
+    }
+
+    /**
      * @brief Adds another Vec2 to this Vec2 in-place.
+     * 
+     * Uses operator+ to perform addition and assigns to self.
+     * 
      * @param rhs The right-hand side Vec2 to add to this Vec2.
      * @return A reference to this Vec2 after addition.
      */
     Vec2& operator+=(const Vec2& rhs) {
-        x += rhs.x;
-        y += rhs.y;
+        *this = *this + rhs;
         return *this;
     }
 
@@ -35,6 +56,15 @@ struct Vec2 {
      */
     bool operator==( const Vec2& rhs ) const {
         return x == rhs.x && y == rhs.y;
+    }
+
+    /**
+     * @brief Multiplies this Vec2 by a scalar and returns the result.
+     * @param scalar The integer value to multiply this Vec2 by.
+     * @return A new Vec2 that is the result of multiplying this Vec2 scalar.
+     */
+    Vec2 operator*(int scalar) const {
+        return { x * scalar, y * scalar };
     }
 };
 
@@ -73,6 +103,32 @@ Vec2 genApplePos(
     return pos;
 }
 
+/**
+ * @brief Updates the position of the snake based on its direction.
+ * @param snake The vector of Vec2 representing the snake's segments.
+ * @param headDir The direction in which the snake's head should move.
+ * @param tailDir The direction in which the snake's tail points.
+ */
+void tickSnake(
+    std::vector<Vec2>& snake, 
+    Vec2& headDir, 
+    Vec2& tailDir
+) {
+    // Move each segment to the position of the segment in front of it
+    Vec2 nextPos = snake[0] + headDir;
+    for (size_t i = 0; i < snake.size(); i++) {
+        Vec2 currPos = snake[i];
+        snake[i] = nextPos;
+        nextPos = currPos;
+    }
+    // Update tail direction
+    if (snake.size() <= 1) {
+        tailDir = headDir * -1;
+    } else {
+        tailDir = snake[snake.size() - 1] - snake[snake.size() - 2];
+    }
+}
+
 int main() {
     // Initialize ncurses
     initscr();
@@ -95,7 +151,8 @@ int main() {
     // Initialize game state
     std::vector<Vec2> snake = { Vec2{MAX_X / 2, MAX_Y / 2} };
     Vec2 applePos = { dist_x(gen), dist_y(gen) };
-    Vec2 direction = { 1, 0 };
+    Vec2 headDir = { 1, 0 };
+    Vec2 tailDir = { -1, 0 };
     int score = 0;
 
     // Game loop
@@ -115,14 +172,14 @@ int main() {
         // Update direction
         if (input != ERR) {
             switch (input) {
-                case 'w': direction = { 0, -1 }; break;
-                case 's': direction = { 0, 1 }; break;
-                case 'a': direction = { -1, 0 }; break;
-                case 'd': direction = { 1, 0 }; break;
+                case 'w': headDir = { 0, -1 }; break;
+                case 's': headDir = { 0, 1 }; break;
+                case 'a': headDir = { -1, 0 }; break;
+                case 'd': headDir = { 1, 0 }; break;
             } 
         }
         // Tick
-        snake[0] += direction;
+        tickSnake(snake, headDir, tailDir);
         // Out of bounds check
         if (snake[0].x < 1 || snake[0].x > MAX_X || 
             snake[0].y < 1 || snake[0].y > MAX_Y) 
@@ -133,12 +190,16 @@ int main() {
         if (snake[0] == applePos) {
             score++;
             applePos = genApplePos(gen, dist_x, dist_y, snake);
+            // Add new segment at tail
+            snake.push_back(snake.back() + tailDir);
         }
 
         // Draw game state
         clear();
         mvaddch(applePos.y, applePos.x * 2, '@');
-        mvaddch(snake[0].y, snake[0].x * 2, '*');
+        for (const Vec2& segment : snake) {
+            mvaddch(segment.y, segment.x * 2, '*');
+        }
         refresh();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
