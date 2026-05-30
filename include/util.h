@@ -1,3 +1,9 @@
+/**
+ * @file util.h
+ * @author Oliver Santana
+ * @brief Utility header for snake game.
+ */
+
 #ifndef UTIL_H
 #define UTIL_H
 

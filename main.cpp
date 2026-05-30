@@ -1,3 +1,9 @@
+/**
+ * @file main.cpp
+ * @author Oliver Santana
+ * @brief Main entry point for the Snake game.
+ */
+
 #include <ncurses.h>
 #include <random>
 #include <chrono>
