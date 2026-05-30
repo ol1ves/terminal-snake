@@ -55,29 +55,31 @@ int main() {
 
     // Game loop
     while (true) {
-        // Draw game state
-        clear();
-        mvaddch(applePos.y, applePos.x * 2, '@');
-        mvaddch(headPos.y, headPos.x * 2, '*');
-        headPos += direction; 
-        refresh();
-
-        // Drain input buffer
-        int ch;
-        int last = ERR;
-        while ((ch = getch()) != ERR) {
-            last = ch;
-        }
+        // Drain input buffer get most recent input
+        int input = []() -> int {
+            int in, out;
+            while ((in = getch()) != ERR) {
+                out = in; 
+            }
+            return out;
+        }();
 
         // Update direction
-        if (last != ERR) {
-            switch (last) {
+        if (input != ERR) {
+            switch (input) {
                 case 'w': direction = { 0, -1 }; break;
                 case 's': direction = { 0, 1 }; break;
                 case 'a': direction = { -1, 0 }; break;
                 case 'd': direction = { 1, 0 }; break;
             } 
         }
+
+        // Draw game state
+        clear();
+        mvaddch(applePos.y, applePos.x * 2, '@');
+        mvaddch(headPos.y, headPos.x * 2, '*');
+        headPos += direction; 
+        refresh();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
