@@ -205,7 +205,7 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
     } // Game over
     clear();
-    mvaddstr(LINES / 2, (COLS - 9) / 2, "Game Over");
+    mvprintw(LINES / 2, (COLS - 20) / 2, "Game Over! Score: %d", score);
     refresh();
     nodelay(stdscr, FALSE);
     getch();
