@@ -76,12 +76,17 @@ int main() {
                 case 'd': direction = { 1, 0 }; break;
             } 
         }
+        // Tick
+        snake[0] += direction;
+        // Out of bounds check
+        if (snake[0].x < 1 || snake[0].x > MAX_X || snake[0].y < 1 || snake[0].y > MAX_Y) {
+            break;
+        }
 
         // Draw game state
         clear();
         mvaddch(applePos.y, applePos.x * 2, '@');
         mvaddch(snake[0].y, snake[0].x * 2, '*');
-        snake[0] += direction; 
         refresh();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
