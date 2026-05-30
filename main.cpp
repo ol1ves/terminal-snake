@@ -20,7 +20,7 @@ int main() {
     nodelay(stdscr, TRUE);
 
     // Get terminal dimensions
-    int maxX = COLS - 1;
+    int maxX = COLS / 2 - 1;
     int maxY = LINES - 1;
 
     // Initialize rng
@@ -38,10 +38,9 @@ int main() {
     while (true) {
         // Draw game state
         clear();
-        mvaddch(applePos.y, applePos.x, '@');
-        mvaddch(headPos.y, headPos.x, '*');
-        headPos.x += direction.x * 2;
-        headPos.y += direction.y;
+        mvaddch(applePos.y, applePos.x * 2, '@');
+        mvaddch(headPos.y, headPos.x * 2, '*');
+        headPos += direction; 
         refresh();
 
         // Drain input buffer
@@ -60,7 +59,7 @@ int main() {
             } 
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(150));
     }
     endwin();
     return 0;
