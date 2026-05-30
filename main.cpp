@@ -154,9 +154,10 @@ int main() {
     Vec2 headDir = { 1, 0 };
     Vec2 tailDir = { -1, 0 };
     int score = 0;
+    bool gameOver = false;
 
     // Game loop
-    while (true) {
+    while (!gameOver) {
         // Drain input buffer get most recent input
         int input = []() -> int {
             int in, out;
@@ -184,7 +185,15 @@ int main() {
         if (snake[0].x < 1 || snake[0].x > MAX_X || 
             snake[0].y < 1 || snake[0].y > MAX_Y) 
         {
+            gameOver = true;
             break;
+        }
+        // Self collision check
+        for (size_t i = 1; i < snake.size(); i++) {
+            if (snake[0] == snake[i]) {
+                gameOver = true;
+                break;
+            }
         }
         // Apple collision check
         if (snake[0] == applePos) {
