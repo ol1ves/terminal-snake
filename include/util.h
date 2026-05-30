@@ -7,6 +7,10 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+/**
+ * @struct Vec2
+ * @brief Simple 2D vector struct for representing positions 2D space.
+ */
 struct Vec2 {
     int x;
     int y;
