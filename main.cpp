@@ -40,7 +40,8 @@ int main() {
         clear();
         mvaddch(applePos.y, applePos.x, '@');
         mvaddch(headPos.y, headPos.x, '*');
-        headPos += direction;
+        headPos.x += direction.x * 2;
+        headPos.y += direction.y;
         refresh();
 
         // Drain input buffer
@@ -58,7 +59,7 @@ int main() {
                 case 'd': direction = { 1, 0 }; break;
             } 
         }
-        
+
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     endwin();
