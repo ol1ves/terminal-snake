@@ -129,6 +129,11 @@ int main() {
         {
             break;
         }
+        // Apple collision check
+        if (snake[0] == applePos) {
+            score++;
+            applePos = genApplePos(gen, dist_x, dist_y, snake);
+        }
 
         // Draw game state
         clear();
