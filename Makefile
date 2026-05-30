@@ -1,5 +1,5 @@
 CXX      := c++
-CXXFLAGS := -std=c++17 -Wall -Wextra 
+CXXFLAGS := -std=c++17 -Wall -Wextra -Iinclude
 LDLIBS   := -lncurses
 
 BUILD    := build
