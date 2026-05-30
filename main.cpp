@@ -27,7 +27,51 @@ struct Vec2 {
         y += rhs.y;
         return *this;
     }
+
+    /**
+     * @brief Checks if this Vec2 is equal to another Vec2.
+     * @param rhs The right-hand side Vec2 to compare with this Vec2.
+     * @return true if both Vec2s have the same x and y values, false otherwise.
+     */
+    bool operator==( const Vec2& rhs ) const {
+        return x == rhs.x && y == rhs.y;
+    }
 };
+
+/**
+ * @brief Generates a random position for apple that is not occupied by snake.
+ * 
+ * Repeadedly generates random positions until it finds one that is not occupied 
+ * by the snake.
+ * 
+ * @param gen The random number generator to use for generating random numbers.
+ * @param dist_x The uniform distribution for generating x coordinates.
+ * @param dist_y The uniform distribution for generating y coordinates.
+ * @param snake The current positions of the snake segments.
+ * @return A Vec2 representing a valid position for the apple.
+ */
+Vec2 genApplePos(
+    std::mt19937& gen, 
+    std::uniform_int_distribution<>& dist_x, 
+    std::uniform_int_distribution<>& dist_y, 
+    const std::vector<Vec2>& snake
+) {
+    Vec2 pos;
+    bool valid;
+    // Generate positions until one is valid
+    do {
+        pos = { dist_x(gen), dist_y(gen) };
+        valid = true;
+        // Check all snake segments for collision with generated position
+        for (const Vec2& segment : snake) {
+            if (pos == segment) {
+                valid = false;
+                break;
+            }
+        }
+    } while (!valid);
+    return pos;
+}
 
 int main() {
     // Initialize ncurses
@@ -52,6 +96,7 @@ int main() {
     std::vector<Vec2> snake = { Vec2{MAX_X / 2, MAX_Y / 2} };
     Vec2 applePos = { dist_x(gen), dist_y(gen) };
     Vec2 direction = { 1, 0 };
+    int score = 0;
 
     // Game loop
     while (true) {
