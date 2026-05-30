@@ -2,21 +2,7 @@
 #include <random>
 #include <chrono>
 #include <thread>
-
-struct Vec2 {
-    int x;
-    int y;
-
-    Vec2 operator+(const Vec2& rhs) const {
-        return { x + rhs.x, y + rhs.y };
-    }
-
-    Vec2& operator+=(const Vec2& rhs) {
-        x += rhs.x;
-        y += rhs.y;
-        return *this;
-    }
-};
+#include "util.h"
 
 int main() {
     // Initialize ncurses
