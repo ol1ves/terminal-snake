@@ -64,6 +64,9 @@ int main() {
             return out;
         }();
 
+        /*
+            Update state
+        */
         // Update direction
         if (input != ERR) {
             switch (input) {
@@ -82,7 +85,12 @@ int main() {
         refresh();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
-    }
+    } // Game over
+    clear();
+    mvaddstr(LINES / 2, (COLS - 9) / 2, "Game Over");
+    refresh();
+    nodelay(stdscr, FALSE);
+    getch();
     endwin();
     return 0;
 }
