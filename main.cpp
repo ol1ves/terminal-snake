@@ -59,6 +59,15 @@ struct Vec2 {
     }
 
     /**
+     * @brief Checks if this Vec2 is not equal to another Vec2.
+     * @param rhs The right-hand side Vec2 to compare with this Vec2.
+     * @return true if x or y values of the Vec2s differ, othersise false.
+     */
+    bool operator!=( const Vec2& rhs ) const {
+        return !(*this == rhs);
+    }
+
+    /**
      * @brief Multiplies this Vec2 by a scalar and returns the result.
      * @param scalar The integer value to multiply this Vec2 by.
      * @return A new Vec2 that is the result of multiplying this Vec2 scalar.
@@ -172,11 +181,18 @@ int main() {
         */
         // Update direction
         if (input != ERR) {
+            Vec2 newDir = headDir;
             switch (input) {
-                case 'w': headDir = { 0, -1 }; break;
-                case 's': headDir = { 0, 1 }; break;
-                case 'a': headDir = { -1, 0 }; break;
-                case 'd': headDir = { 1, 0 }; break;
+                case 'w': newDir = { 0, -1 }; break;
+                case 's': newDir = { 0, 1 }; break;
+                case 'a': newDir = { -1, 0 }; break;
+                case 'd': newDir = { 1, 0 }; break;
+                default: break;
+            }
+
+            // Ignore direction opposite current head direction
+            if (newDir != headDir * -1) {
+                headDir = newDir;
             } 
         }
         // Tick
