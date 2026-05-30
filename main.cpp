@@ -49,8 +49,8 @@ int main() {
     std::uniform_int_distribution<> dist_y(1, maxY);
 
     // Initialize game state
+    std::vector<Vec2> snake = { Vec2{maxX / 2, maxY / 2} };
     Vec2 applePos = { dist_x(gen), dist_y(gen) };
-    Vec2 headPos = { maxX / 2, maxY / 2 };
     Vec2 direction = { 1, 0 };
 
     // Game loop
@@ -77,8 +77,8 @@ int main() {
         // Draw game state
         clear();
         mvaddch(applePos.y, applePos.x * 2, '@');
-        mvaddch(headPos.y, headPos.x * 2, '*');
-        headPos += direction; 
+        mvaddch(snake[0].y, snake[0].x * 2, '*');
+        snake[0] += direction; 
         refresh();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
