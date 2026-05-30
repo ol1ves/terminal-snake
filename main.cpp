@@ -39,17 +39,17 @@ int main() {
     nodelay(stdscr, TRUE);
 
     // Get terminal dimensions
-    int maxX = COLS / 2 - 1;
-    int maxY = LINES - 1;
+    int MAX_X = COLS / 2 - 1;
+    int MAX_Y = LINES - 1;
 
     // Initialize rng
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist_x(1, maxX);
-    std::uniform_int_distribution<> dist_y(1, maxY);
+    std::uniform_int_distribution<> dist_x(1, MAX_X);
+    std::uniform_int_distribution<> dist_y(1, MAX_Y);
 
     // Initialize game state
-    std::vector<Vec2> snake = { Vec2{maxX / 2, maxY / 2} };
+    std::vector<Vec2> snake = { Vec2{MAX_X / 2, MAX_Y / 2} };
     Vec2 applePos = { dist_x(gen), dist_y(gen) };
     Vec2 direction = { 1, 0 };
 
