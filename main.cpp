@@ -79,7 +79,9 @@ int main() {
         // Tick
         snake[0] += direction;
         // Out of bounds check
-        if (snake[0].x < 1 || snake[0].x > MAX_X || snake[0].y < 1 || snake[0].y > MAX_Y) {
+        if (snake[0].x < 1 || snake[0].x > MAX_X || 
+            snake[0].y < 1 || snake[0].y > MAX_Y) 
+        {
             break;
         }
 
