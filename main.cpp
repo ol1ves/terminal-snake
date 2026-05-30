@@ -1,14 +1,33 @@
 /**
- * @file main.cpp
+ * Terminal Snake Game 
  * @author Oliver Santana
- * @brief Main entry point for the Snake game.
+ * 
+ * A simple terminal based snake game for me learn and experiment.
  */
 
 #include <ncurses.h>
 #include <random>
 #include <chrono>
 #include <thread>
-#include "util.h"
+
+/**
+ * @brief Simple 2D vector struct
+ */
+struct Vec2 {
+    int x;
+    int y;
+
+    /**
+     * @brief Adds another Vec2 to this Vec2 in-place.
+     * @param rhs The right-hand side Vec2 to add to this Vec2.
+     * @return A reference to this Vec2 after addition.
+     */
+    Vec2& operator+=(const Vec2& rhs) {
+        x += rhs.x;
+        y += rhs.y;
+        return *this;
+    }
+};
 
 int main() {
     // Initialize ncurses
@@ -49,6 +68,7 @@ int main() {
         while ((ch = getch()) != ERR) {
             last = ch;
         }
+
         // Update direction
         if (last != ERR) {
             switch (last) {
@@ -59,7 +79,7 @@ int main() {
             } 
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(150));
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
     endwin();
     return 0;
