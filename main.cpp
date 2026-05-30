@@ -30,7 +30,7 @@ struct Vec2 {
     /**
      * @brief Subtracts another Vec2 from this Vec2 and returns the result.
      * @param rhs The right-hand side Vec2 to subtract from this Vec2.
-     * @return A new Vec2 that is the difference between this Vec2 and the rhs Vec2.
+     * @return A new Vec2 that is the difference between this Vec2 and rhs.
      */
     Vec2 operator-(const Vec2& rhs) const {
         return { x - rhs.x, y - rhs.y };
