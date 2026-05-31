@@ -137,8 +137,8 @@ int main() {
     nodelay(stdscr, TRUE);
 
     // Set game area bounds
-    int SAFE_X[2] = { 1, COLS / 2 - 3 };
-    int SAFE_Y[2] = { 1, LINES - 2 };
+    int SAFE_X[2] = { 1, (COLS - 2)/ 2};
+    int SAFE_Y[2] = { 1, LINES -  3 };
     /*
     int MAX_X = COLS / 2 - 3;
     int MAX_Y = LINES - 2;
