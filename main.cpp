@@ -136,18 +136,22 @@ int main() {
     clear();
     nodelay(stdscr, TRUE);
 
-    // Get terminal dimensions
-    int MAX_X = COLS / 2 - 1;
-    int MAX_Y = LINES - 1;
+    // Set game area bounds
+    int SAFE_X[2] = { 1, COLS / 2 - 3 };
+    int SAFE_Y[2] = { 1, LINES - 2 };
+    /*
+    int MAX_X = COLS / 2 - 3;
+    int MAX_Y = LINES - 2;
+    */
 
     // Initialize rng
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist_x(1, MAX_X);
-    std::uniform_int_distribution<> dist_y(1, MAX_Y);
+    std::uniform_int_distribution<> dist_x(SAFE_X[0], SAFE_X[1]);
+    std::uniform_int_distribution<> dist_y(SAFE_Y[0], SAFE_Y[1]);
 
     // Initialize game state
-    std::vector<Vec2> snake = { Vec2{MAX_X / 2, MAX_Y / 2} };
+    std::vector<Vec2> snake = { Vec2{SAFE_X[1] / 2, SAFE_Y[1] / 2} };
     Vec2 applePos = genApplePos(gen, dist_x, dist_y, snake);
     Vec2 headDir = { 1, 0 };
     int score = 0;
@@ -186,8 +190,8 @@ int main() {
         // Tick
         tickSnake(snake, headDir);
         // Out of bounds check
-        if (snake[0].x < 1 || snake[0].x > MAX_X || 
-            snake[0].y < 1 || snake[0].y > MAX_Y) 
+        if (snake[0].x < SAFE_X[0] || snake[0].x > SAFE_X[1] || 
+            snake[0].y < SAFE_Y[0] || snake[0].y > SAFE_Y[1]) 
         {
             gameOver = true;
             break;
@@ -208,8 +212,24 @@ int main() {
             applePos = genApplePos(gen, dist_x, dist_y, snake);
         }
 
-        // Draw game state
+        /*
+            Render state
+        */
         clear();
+        // Border
+        for (int x = 1; x < COLS - 1; ++x) {
+            mvaddch(0, x, '-');
+            mvaddch(LINES - 2, x, '-');
+        }
+        for (int y = 1; y < LINES - 2; ++y) {
+            mvaddch(y, 0, '|');
+            mvaddch(y, COLS - 1, '|');
+        }
+        mvaddch(0, 0, '+'); mvaddch(0, COLS - 1, '+');
+        mvaddch(LINES - 2, 0, '+'); mvaddch(LINES - 2, COLS - 1, '+');
+        // Score
+        mvprintw(LINES - 1, 0, " Score: %d ", score);
+        // Apple and snake
         mvaddch(applePos.y, applePos.x * 2, '@');
         for (const Vec2& segment : snake) {
             mvaddch(segment.y, segment.x * 2, '*');
@@ -218,7 +238,6 @@ int main() {
 
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
     } // Game over
-    clear();
     mvprintw(LINES / 2, COLS / 2, "Game Over! Score: %d", score);
     mvprintw(LINES / 2 + 1, COLS / 2, "Press any key to exit.");
     refresh();
