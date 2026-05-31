@@ -116,25 +116,14 @@ Vec2 genApplePos(
  * @brief Updates the position of the snake based on its direction.
  * @param snake The vector of Vec2 representing the snake's segments.
  * @param headDir The direction in which the snake's head should move.
- * @param tailDir The direction in which the snake's tail points.
  */
-void tickSnake(
-    std::vector<Vec2>& snake, 
-    Vec2& headDir, 
-    Vec2& tailDir
-) {
+void tickSnake(std::vector<Vec2>& snake, Vec2& headDir) {
     // Move each segment to the position of the segment in front of it
     Vec2 nextPos = snake[0] + headDir;
     for (size_t i = 0; i < snake.size(); i++) {
         Vec2 currPos = snake[i];
         snake[i] = nextPos;
         nextPos = currPos;
-    }
-    // Update tail direction
-    if (snake.size() <= 1) {
-        tailDir = headDir * -1;
-    } else {
-        tailDir = snake[snake.size() - 1] - snake[snake.size() - 2];
     }
 }
 
@@ -159,9 +148,8 @@ int main() {
 
     // Initialize game state
     std::vector<Vec2> snake = { Vec2{MAX_X / 2, MAX_Y / 2} };
-    Vec2 applePos = { dist_x(gen), dist_y(gen) };
+    Vec2 applePos = genApplePos(gen, dist_x, dist_y, snake);
     Vec2 headDir = { 1, 0 };
-    Vec2 tailDir = { -1, 0 };
     int score = 0;
     bool gameOver = false;
 
@@ -169,7 +157,7 @@ int main() {
     while (!gameOver) {
         // Drain input buffer get most recent input
         int input = []() -> int {
-            int in, out;
+            int in, out = ERR;
             while ((in = getch()) != ERR) {
                 out = in; 
             }
@@ -196,7 +184,7 @@ int main() {
             } 
         }
         // Tick
-        tickSnake(snake, headDir, tailDir);
+        tickSnake(snake, headDir);
         // Out of bounds check
         if (snake[0].x < 1 || snake[0].x > MAX_X || 
             snake[0].y < 1 || snake[0].y > MAX_Y) 
@@ -214,9 +202,10 @@ int main() {
         // Apple collision check
         if (snake[0] == applePos) {
             score++;
-            applePos = genApplePos(gen, dist_x, dist_y, snake);
             // Add new segment at tail
-            snake.push_back(snake.back() + tailDir);
+            snake.push_back(snake.back());
+            // Generate new apple position
+            applePos = genApplePos(gen, dist_x, dist_y, snake);
         }
 
         // Draw game state
